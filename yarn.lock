@@ -2,6 +2,19 @@
 # yarn lockfile v1
 
 
+"@types/prop-types@*":
+  version "15.5.5"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.5.tgz#17038dd322c2325f5da650a94d5f9974943625e3"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^16.4.14":
+  version "16.4.14"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.14.tgz#47c604c8e46ed674bbdf4aabf82b34b9041c6a04"
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
 "@webassemblyjs/ast@1.5.10":
   version "1.5.10"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.5.10.tgz#7f1e81149ca4e103c9e7cc321ea0dcb83a392512"
@@ -795,6 +808,10 @@ babylon@^6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
+babylonjs@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-3.2.0.tgz#14cb71f27adaae1b071a03bd0d292b0fe07e448e"
+
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
@@ -1344,6 +1361,10 @@ crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
     randomfill "^1.0.3"
+
+csstype@^2.2.0:
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.5.7.tgz#bf9235d5872141eccfb2d16d82993c6b149179ff"
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
