@@ -3,6 +3,8 @@ module Client
 open Elmish
 open Elmish.React
 
+open Fable.Core
+open Fable.Core.JsInterop
 open Fable.Helpers.React
 open Fable.Helpers.React.Props
 open Fable.PowerPack.Fetch
@@ -16,7 +18,8 @@ open Fulma
 // in this case, we are keeping track of a counter
 // we mark it as optional, because initially it will not be available from the client
 // the initial value will be requested from server
-type Model = { Counter: Counter option }
+type FileModel = { Path : string; FileName : string }
+type Model = { Counter: Counter option; File: FileModel option }
 
 // The Msg type defines what events/actions can occur while the application is running
 // the state of the application changes *only* in reaction to these events
@@ -24,12 +27,14 @@ type Msg =
 | Increment
 | Decrement
 | InitialCountLoaded of Result<Counter, exn>
+| ShowModel1
+| ShowModel2
 
 
 
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
-    let initialModel = { Counter = None }
+    let initialModel = { Counter = None; File = None }
     let loadCountCmd =
         Cmd.ofPromise
             (fetchAs<int> "/api/init")
@@ -50,10 +55,26 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
         let nextModel = { currentModel with Counter = Some (x - 1) }
         nextModel, Cmd.none
     | _, InitialCountLoaded (Ok initialCount)->
-        let nextModel = { Counter = Some initialCount }
+        let nextModel = { Counter = Some initialCount; File = None }
         nextModel, Cmd.none
+        
+    | _, ShowModel1 -> { currentModel with File = Some { Path = "https://playground.babylonjs.com/scenes/"; FileName = "dummy3.babylon" } }, Cmd.none
+    | _, ShowModel2 -> { currentModel with File = Some { Path = "https://playground.babylonjs.com/scenes/"; FileName = "skull.babylon" } }, Cmd.none
 
     | _ -> currentModel, Cmd.none
+
+
+// -------------------------------------------------------
+// Import the TypeScript component
+
+type SingleFileBabylonViewerProps =
+  | StlUrl of string
+  | StlFileName of string
+
+let inline SingleFileBabylonViewer (props : SingleFileBabylonViewerProps list) : Fable.Import.React.ReactElement =
+    ofImport "default" "./SingleFileBabylonViewer.tsx" (keyValueList CaseRules.LowerFirst props) []
+    
+// -------------------------------------------------------
 
 
 let safeComponents =
@@ -97,7 +118,19 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ] ]
                 Columns.columns []
                     [ Column.column [] [ button "-" (fun _ -> dispatch Decrement) ]
-                      Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ] ]
+                      Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ]
+
+                Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
+                    [ Heading.h3 [] [ str ("Select a model to view ") ] ]
+                Columns.columns []
+                    [ Column.column [] [ button "Show Human" (fun _ -> dispatch ShowModel1) ]
+                      Column.column [] [ button "Show Skull" (fun _ -> dispatch ShowModel2) ] ]
+
+                // Render the Typescript Component
+                (match model.File with
+                 | Some f -> SingleFileBabylonViewer [ StlUrl f.Path; StlFileName f.FileName ]
+                 | None -> str "No model selected")
+              ]
 
           Footer.footer [ ]
                 [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]

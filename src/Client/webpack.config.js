@@ -34,6 +34,7 @@ module.exports = {
     },
     resolve: {
         symlinks: false,
+        extensions: ['.ts', '.tsx', '.wasm', '.mjs', '.js', '.json'], // default is ['.wasm', '.mjs', '.js', '.json']
         modules: [resolve("../../node_modules/")]
     },
     devServer: {
@@ -66,6 +67,10 @@ module.exports = {
                     loader: 'babel-loader',
                     options: babelOptions
                 },
+            },
+            {
+                test: /\.tsx?$/,
+                loader: 'awesome-typescript-loader'
             }
         ]
     },
